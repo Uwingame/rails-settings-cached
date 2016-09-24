@@ -24,8 +24,12 @@ module RailsSettings
       end
 
       def cache_key(var_name, scope_object)
-        scope = ['rails_settings_cached', cache_prefix_by_startup]
-        scope << @cache_prefix.call if @cache_prefix
+        scope = ['rails_settings_cached']
+        if @cache_prefix
+          scope << @cache_prefix.call
+        else
+          scope << cache_prefix_by_startup
+        end
         scope << "#{scope_object.class.name}-#{scope_object.id}" if scope_object
         scope << var_name.to_s
         scope.join('/')
